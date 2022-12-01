@@ -12,29 +12,31 @@ const messages = {
 };
 
 export const renderFeedback = (elements, feedbackText) => {
-  elements.feedback.textContent = messages[feedbackText];
+  const { feedback } = elements;
+  feedback.textContent = messages[feedbackText];  
 };
 
 const handleProcessState = (elements, process) => {
+  const { form, input, feedback } = elements;
   switch (process) {
     case 'filling':
-      elements.input.focus();
+      input.focus();
       break;
-    case 'success':
-    //   elements.form.reset();
-      elements.input.focus();
-      elements.input.classList.remove('is-invalid');
-      elements.feedback.classList.remove('text-danger');
-      elements.feedback.classList.add('text-success');
-      break;
+    case 'success':      
+      feedback.classList.remove('text-danger');
+      feedback.classList.add('text-success');
+      input.classList.remove('is-invalid');
+      form.reset();
+      input.focus();
+    break;
     case 'error':
-      elements.input.classList.remove('is-valid');
-      elements.input.classList.add('is-invalid');
-      elements.feedback.classList.remove('text-success');
-      elements.feedback.classList.add('text-danger');
-      break;
-
+      input.classList.remove('is-valid');
+      input.classList.add('is-invalid');
+      feedback.classList.remove('text-success');
+      feedback.classList.add('text-danger');
+      break;        
     default:
+      
       break;
   }
 };
