@@ -1,53 +1,80 @@
 import * as yup from 'yup';
 import onChange from 'on-change';
-import render, { renderText, elements } from './view.js';
+import render, { renderText } from './view.js';
 import i18n from 'i18next';
 import resources from './locales/index.js';
+import axios from 'axios';
+import parser from './parser.js';
+import _ from 'lodash';
 
-// const messages = {
-//   url: 'Ссылка должна быть валидным URL',
-//   notOneOf: 'RSS уже существует',
-//   success: 'RSS успешно загружен',
-// };
+const validate = (url, urls) => yup.string().required().url('mustBeValid').notOneOf(urls, 'linkExists').validate(url);
 
-const validate = (url, urls) => yup.string().required().url()
-  .notOneOf(urls)
-  .validate(url);
+const addFeed = (url, data, state) => {
+  state.urls.push(url);
+  state.feeds.push(data.feed);
+  state.posts.unshift(...data.posts);
+}
+
+const formHandler = (e, watchedState) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const url = formData.get('url');
+
+  validate(url, watchedState.urls)
+    .then((link) => {
+      // watchedState.urls.push(link) 
+      watchedState.process = 'sending';
+      watchedState.messages = 'loading'; 
+      return axios
+      .get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(link)}`)
+      
+    })
+    .then((response) => {            
+      const data = parser(response.data.contents);  
+      addFeed(url, data, watchedState);
+      watchedState.process = 'success';
+      watchedState.messages = 'success';       
+    })
+    .catch((err) => {
+      watchedState.process = 'error';
+      watchedState.messages = err.message; 
+      console.log(watchedState.messages)       
+    });
+}
+
+const defaulltLng = 'ru';
 
 export default () => {
   const state = {
-    lng: 'en',
     process: 'filling',
+    messages: null,
     urls: [],
-    feedbackText: null,
+    feeds: [],
+    posts: [],
+    ui: {
+      visitedLinks: null,
+      modal: null,
+    },
   };
 
   const i18next = i18n.createInstance();
   i18next.init({
-    lng: state.lng,
+    lng: defaulltLng,
     debug: false,
     resources,
-  })   
-  renderText(elements, i18next);
+  });
+  
+  const elements = {
+    form: document.querySelector('.rss-form'),
+    input: document.getElementById('url-input'),
+    button: document.querySelector('[aria-label="add"]'),
+    feedback: document.querySelector('.feedback'),
+    posts: document.querySelector('.posts'),
+    feeds: document.querySelector('.feeds'),
+  };
 
-  const watchedState = onChange(state, render(elements, i18next));
+  const { form } = elements;
+  const watchedState = onChange(state, render(state, elements, i18next));
 
-  elements.form.addEventListener('submit', ((event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const url = formData.get('url');
-    const { urls } = state;
-
-    validate(url, urls)
-      .then((url) => {
-        watchedState.process = 'success';
-        watchedState.feedbackText = 'success';
-        watchedState.urls.push(url);
-        
-      })
-      .catch((err) => {
-        watchedState.process = 'error';
-        watchedState.feedbackText = err.type;        
-      });
-  })); 
+  form.addEventListener('submit', (e) => formHandler(e, watchedState));
 };

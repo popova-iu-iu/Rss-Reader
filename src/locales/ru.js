@@ -6,9 +6,11 @@ export default {
         example: 'Например https://ru.hexlet.io/lessons.rss',
         button: 'Добавить',
         messages: {
-            url: 'Ссылка должна быть валидным URL',
-            notOneOf: 'RSS уже существует',
+            mustBeValid: 'Ссылка должна быть валидным URL',
+            linkExists: 'RSS уже существует',
+            rss: 'Ресурс не содержит валидный RSS',
             success: 'RSS успешно загружен',
+            loading: 'Идет загрузка...',
         }    
     },
   };

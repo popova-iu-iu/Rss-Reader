@@ -39,14 +39,87 @@
             </section>
             <section class="container-fluid container-xxl p-5">
               <div class="row">
-                <div class="col-md-10 col-lg-8 order-1 mx-auto posts"></div>
-                <div class="col-md-10 col-lg-4 mx-auto order-0 order-lg-1 feeds"></div>
+                <div class="col-md-10 col-lg-8 order-1 mx-auto posts">
+                  <!-- TEMPLATE_POST_WRAPPER -->
+                </div>
+                <div class="col-md-10 col-lg-4 mx-auto order-0 order-lg-1 feeds">
+                  <!-- TEMPLATE_FEEDS_WRAPPER -->
+                </div>
               </div>
             </section>
+        
+            <!-- Templates -->
+            <template id="template-feeds-wrapper">
+              <div class="card border-0">
+                <div class="card-body">
+                  <h2 class="card-title h4">Фиды</h2>
+                </div>
+                <ul class="list-group border-0 rounded-0">
+                  <!-- TEMPLATE_FEED -->
+                </ul>
+              </div>
+            </template>
+            <template id="template-feed-element">
+              <li class="list-group-item border-0 border-end-0">
+                <h3 class="h6 m-0 feed-title">
+                  <!-- Title from data -->
+                </h3>
+                <p class="m-0 small text-black-50 feed-description">
+                  <!-- Subtitle from data -->
+                </p>
+              </li>
+            </template>
+            <template id="template-posts-wrapper">
+              <div class="card border-0">
+                <div class="card-body"><h2 class="card-title h4">Посты</h2></div>
+                <ul class="list-group border-0 rounded-0">
+                  <!-- TEMPLATE_POST -->
+                </ul>
+              </div>
+            </template>
+            <template id="template-post-element">
+              <li
+                class="list-group-item d-flex justify-content-between align-items-start border-0 border-end-0"
+              >
+                <a
+                  href="https://ru.hexlet.io/courses/php-basics/lessons/symbols/theory_unit"
+                  class="fw-bold"
+                  data-id="2"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  ><!--template text-->></a
+                ><button
+                  type="button"
+                  class="btn btn-outline-primary"
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleModal"
+                >
+                  <!--template text (i18next)-->Просмотр
+                </button>
+              </li>
+            </template>
+        
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body"> 
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <a href="" target="_blank" type="button" class="btn btn-primary">Читать полностью</a>
+                  </div>
+                </div>
+              </div>
+            </div>
           </main>
           <footer class="footer border-top py-3 mt-5 bg-light">
             <div class="container-xl">
-              <div class="text-center"></div>
+              <div class="text-center">created by <a href="https://github.com/popova-iu-iu/frontend-project-11">BeepBoop</a></div>
             </div>
           </footer>
     </body>
