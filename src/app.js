@@ -1,58 +1,41 @@
 import * as yup from 'yup';
 import onChange from 'on-change';
-import render, { renderText } from './view.js';
+import render  from './view.js';
 import i18n from 'i18next';
 import resources from './locales/index.js';
 import axios from 'axios';
 import parser from './parser.js';
 import _ from 'lodash';
 
-const validate = (url, urls) => yup.string().required().url('mustBeValid').notOneOf(urls, 'linkExists').validate(url);
+const defaulltLng = 'ru';
+
+const validate = (url, urls) => yup.string().required()
+.url('mustBeValid')
+.notOneOf(urls, 'linkExists')
+.validate(url);
 
 const addFeed = (url, data, state) => {
-  state.urls.push(url);
-  state.feeds.push(data.feed);
-  state.posts.unshift(...data.posts);
-}
-
-const formHandler = (e, watchedState) => {
-  e.preventDefault();
-  const formData = new FormData(e.target);
-  const url = formData.get('url');
-
-  validate(url, watchedState.urls)
-    .then((link) => {
-      // watchedState.urls.push(link) 
-      watchedState.process = 'sending';
-      watchedState.messages = 'loading'; 
-      return axios
-      .get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(link)}`)
-      
-    })
-    .then((response) => {            
-      const data = parser(response.data.contents);  
-      addFeed(url, data, watchedState);
-      watchedState.process = 'success';
-      watchedState.messages = 'success';       
-    })
-    .catch((err) => {
-      watchedState.process = 'error';
-      watchedState.messages = err.message; 
-      console.log(watchedState.messages)       
-    });
-}
-
-const defaulltLng = 'ru';
+  const { urls, feeds, posts } =  state;
+  urls.push(url);
+  feeds.push(data.feed);
+  posts.unshift(...data.posts);
+};
 
 export default () => {
   const state = {
-    process: 'filling',
-    messages: null,
+    form: {
+      valid: true, 
+      processState: 'filling',
+      processError: null,
+      errors: {},
+      status: null,
+    },
     urls: [],
     feeds: [],
     posts: [],
     ui: {
-      visitedLinks: null,
+      lng: defaulltLng,
+      visitedPostsId: [],
       modal: null,
     },
   };
@@ -68,13 +51,60 @@ export default () => {
     form: document.querySelector('.rss-form'),
     input: document.getElementById('url-input'),
     button: document.querySelector('[aria-label="add"]'),
-    feedback: document.querySelector('.feedback'),
+    status: document.querySelector('.status'),
     posts: document.querySelector('.posts'),
     feeds: document.querySelector('.feeds'),
+
+    modal: document.querySelector('.modal'),
+    modalTitle: document.querySelector('.modal-title'),
+    modalBody: document.querySelector('.modal-body'),
+    modalLink: document.querySelector('.modalLink'),
+
+    btnLng: document.querySelector('.btn-group'),
   };
 
-  const { form } = elements;
+  const { form, posts, btnLng } = elements;
   const watchedState = onChange(state, render(state, elements, i18next));
 
-  form.addEventListener('submit', (e) => formHandler(e, watchedState));
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    watchedState.form.processState = 'sending'; 
+    watchedState.form.status = 'loading'
+    watchedState.form.processError = null;
+
+    const formData = new FormData(event.target);
+    const url = formData.get('url');
+    
+    validate(url, watchedState.urls)
+    .then((link) => {
+      return axios
+      .get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(link)}`)
+    })
+    .then((response) => { 
+      const data = parser(response.data.contents);  
+      addFeed(url, data, watchedState);          
+      watchedState.form.processState = 'success'; 
+      watchedState.form.status = 'success';          
+    })
+    .catch((error) => {
+      watchedState.form.processState = 'error'; 
+      watchedState.form.status = error.message; 
+    })
+  }); 
+
+  btnLng.addEventListener('click', (event) => {
+    event. preventDefault();
+
+    const { lng } = event.target.dataset;
+    watchedState.ui.lng = lng;
+  });
+
+  posts.addEventListener('click', (event) => {
+    const { id } = event.target.dataset;
+    if (id) {
+    watchedState.ui.modal = watchedState.posts.find((post) => post.id === id);
+    watchedState.ui.visitedPostsId.push(id);
+    }
+  })
 };
