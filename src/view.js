@@ -11,15 +11,21 @@ const renderText = (elements, i18next) => {
   button.textContent = i18next.t(`button`); 
 };
 
-const changeLng = (elements, value, state, i18next) => {
+const changeLng = (state, elements, value, i18next) => {  
   const lngBtns = document.querySelectorAll('.lngBtn');
   lngBtns.forEach((btn) => {
     btn.classList.remove('active');
     const activeBtn = document.querySelector(`[data-lng="${value}"]`);
     activeBtn.classList.add('active');
     i18next.changeLanguage(value);
-    renderText(elements, i18next)
+    renderText(elements, i18next);
+    renderMessage(elements, i18next, state.form.status);
   })
+};
+
+export const renderMessage = (elements, i18next, message) => {  
+  const { status } = elements;
+  status.textContent = i18next.t(`messages.${message}`);
 };
 
 const renderFeeds = (elements, feeds, i18next) => {
@@ -108,7 +114,8 @@ const renderModal = (elements, posts, i18next) => {
   const { title, description, link } = posts;
   elements.modalTitle.innerHTML = title;
   elements.modalBody.innerHTML = description;
-  elements.modalLink.setAttribute('href', link);  
+  elements.modalLink.setAttribute('href', link); 
+  console.log(posts) 
 };
 
 const renderVisitedPost = (value) => {
@@ -117,15 +124,6 @@ const renderVisitedPost = (value) => {
     link.classList.remove('fw-bold');
     link.classList.add('fw-normal', 'link-secondary');
   });    
-}
-
-
-
-
-
-export const renderMessage = (elements, i18next, message) => {
-  const { status } = elements;
-  status.textContent = i18next.t(`messages.${message}`);
 };
 
 
@@ -183,7 +181,7 @@ const render = (state, elements, i18next) => (path, value) => {
       break;
 
     case 'ui.lng': 
-      changeLng(elements, value, state, i18next);
+      changeLng(state, elements, value, i18next);
       break;
 
     case 'ui.modal':

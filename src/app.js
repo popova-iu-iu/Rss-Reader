@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 import onChange from 'on-change';
-import render  from './view.js';
+import render from './view.js';
 import i18n from 'i18next';
 import resources from './locales/index.js';
 import axios from 'axios';
