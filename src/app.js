@@ -2,7 +2,6 @@ import * as yup from 'yup';
 import onChange from 'on-change';
 import i18n from 'i18next';
 import axios from 'axios';
-// import _ from 'lodash';
 import render from './view.js';
 import resources from './locales/index.js';
 import parser from './parser.js';
