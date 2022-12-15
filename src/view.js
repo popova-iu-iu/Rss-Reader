@@ -1,17 +1,22 @@
 const renderText = (elements, i18next) => {
   const { form, button } = elements;
-  const headline =  document.querySelector('.display-3 ');
-  headline.textContent = i18next.t(`headline`); 
+  const headline = document.querySelector('.display-3 ');
+  headline.textContent = i18next.t('headline');
   const subtitle = document.querySelector('.lead');
-  subtitle.textContent = i18next.t(`subtitle`); 
+  subtitle.textContent = i18next.t('subtitle');
   const placeholder = form.querySelector('[for="url-input"]');
-  placeholder.textContent = i18next.t(`placeholder`);  
+  placeholder.textContent = i18next.t('placeholder');
   const example = document.querySelector('.example');
-  example.textContent = i18next.t(`example`); 
-  button.textContent = i18next.t(`button`); 
+  example.textContent = i18next.t('example');
+  button.textContent = i18next.t('button');
 };
 
-const changeLng = (state, elements, value, i18next) => {  
+export const renderMessage = (elements, i18next, message) => {
+  const { status } = elements;
+  status.textContent = i18next.t(`messages.${message}`);
+};
+
+const changeLng = (state, elements, value, i18next) => {
   const lngBtns = document.querySelectorAll('.lngBtn');
   lngBtns.forEach((btn) => {
     btn.classList.remove('active');
@@ -20,12 +25,7 @@ const changeLng = (state, elements, value, i18next) => {
     i18next.changeLanguage(value);
     renderText(elements, i18next);
     renderMessage(elements, i18next, state.form.status);
-  })
-};
-
-export const renderMessage = (elements, i18next, message) => {  
-  const { status } = elements;
-  status.textContent = i18next.t(`messages.${message}`);
+  });
 };
 
 const renderFeeds = (elements, feeds, i18next) => {
@@ -36,8 +36,7 @@ const renderFeeds = (elements, feeds, i18next) => {
   cardBody.classList.add('card-body');
   const cardTitle = document.createElement('h2');
   cardTitle.classList.add('card-title', 'h4');
-  cardTitle.textContent = 'Фиды';
-  
+  cardTitle.textContent = i18next.t('feeds');
 
   const listContainer = document.createElement('ul');
   listContainer.classList.add('list-group', 'border-0', 'rounded-0');
@@ -46,9 +45,9 @@ const renderFeeds = (elements, feeds, i18next) => {
     const listItem = document.createElement('li');
     listItem.classList.add('list-group-item', 'border-0', 'border-end-0');
     const title = document.createElement('h3');
-    title.classList.add('h6', 'm-0');    ;
+    title.classList.add('h6', 'm-0');
     title.textContent = feed.title;
-    const description = document.createElement('p')
+    const description = document.createElement('p');
     description.classList.add('m-0', 'small', 'text-black-50');
     description.textContent = feed.description;
 
@@ -71,7 +70,7 @@ const renderPosts = (elements, posts, i18next) => {
   cardBody.classList.add('card-body');
   const cardTitle = document.createElement('h2');
   cardTitle.classList.add('card-title', 'h4');
-  cardTitle.textContent = 'Посты';
+  cardTitle.textContent = i18next.t('feeds');
   card.append(cardTitle);
   card.append(cardBody);
 
@@ -101,21 +100,20 @@ const renderPosts = (elements, posts, i18next) => {
 
     listItem.append(a);
     listItem.append(button);
-    listContainer.append(listItem);    
-  })
-  
+    listContainer.append(listItem);
+  });
+
   card.append(cardTitle);
   card.append(cardBody);
   card.append(listContainer);
   elements.posts.append(card);
 };
 
-const renderModal = (elements, posts, i18next) => {
+const renderModal = (elements, posts) => {
   const { title, description, link } = posts;
   elements.modalTitle.innerHTML = title;
   elements.modalBody.innerHTML = description;
-  elements.modalLink.setAttribute('href', link); 
-  console.log(posts) 
+  elements.modalLink.setAttribute('href', link);
 };
 
 const renderVisitedPost = (value) => {
@@ -123,15 +121,16 @@ const renderVisitedPost = (value) => {
     const link = document.querySelector(`[data-id="${id}"]`);
     link.classList.remove('fw-bold');
     link.classList.add('fw-normal', 'link-secondary');
-  });    
+  });
 };
 
-
 const processHandler = (state, elements, process) => {
-  const { form, input, status, button } = elements;
-  
+  const {
+    form, input, status, button,
+  } = elements;
+
   switch (process) {
-    case 'sending':      
+    case 'sending':
       status.classList.remove('text-danger');
       status.classList.remove('text-success');
       status.classList.add('text-warning');
@@ -139,8 +138,8 @@ const processHandler = (state, elements, process) => {
       break;
 
     case 'success':
-      status.textContent = null
-;     status.classList.remove('text-danger');
+      status.textContent = null;
+      status.classList.remove('text-danger');
       status.classList.remove('text-warning');
       status.classList.add('text-success');
       button.disabled = false;
@@ -161,7 +160,6 @@ const processHandler = (state, elements, process) => {
   }
 };
 
-
 const render = (state, elements, i18next) => (path, value) => {
   switch (path) {
     case 'form.processState':
@@ -172,20 +170,19 @@ const render = (state, elements, i18next) => (path, value) => {
       renderMessage(elements, i18next, value);
       break;
 
-    case "feeds":
+    case 'feeds':
       renderFeeds(elements, value, i18next);
       break;
-    case "posts":
-      console.log(value)
+    case 'posts':
       renderPosts(elements, value, i18next);
       break;
 
-    case 'ui.lng': 
+    case 'ui.lng':
       changeLng(state, elements, value, i18next);
       break;
 
     case 'ui.modal':
-      renderModal(elements, value, i18next);
+      renderModal(elements, value);
       break;
 
     case 'ui.visitedPostsId':
