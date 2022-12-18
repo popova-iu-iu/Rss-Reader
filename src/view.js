@@ -1,5 +1,7 @@
 const renderText = (elements, i18next) => {
-  const { form, button } = elements;
+  const {
+    form, button, readMore, close,
+  } = elements;
   const headline = document.querySelector('.display-3 ');
   headline.textContent = i18next.t('headline');
   const subtitle = document.querySelector('.lead');
@@ -9,6 +11,9 @@ const renderText = (elements, i18next) => {
   const example = document.querySelector('.example');
   example.textContent = i18next.t('example');
   button.textContent = i18next.t('button');
+
+  readMore.textContent = i18next.t('readMore');
+  close.textContent = i18next.t('close');
 };
 
 export const renderMessage = (elements, i18next, message) => {
@@ -16,15 +21,11 @@ export const renderMessage = (elements, i18next, message) => {
   status.textContent = i18next.t(`messages.${message}`);
 };
 
-const changeLng = (state, elements, value, i18next) => {
-  const lngBtns = document.querySelectorAll('.lngBtn');
-  lngBtns.forEach((btn) => {
-    btn.classList.remove('active');
-    const activeBtn = document.querySelector(`[data-lng="${value}"]`);
-    activeBtn.classList.add('active');
-    i18next.changeLanguage(value);
-    renderText(elements, i18next);
-    renderMessage(elements, i18next, state.form.status);
+const renderVisitedPost = (visitedPostId) => {
+  visitedPostId.forEach((id) => {
+    const link = document.querySelector(`[data-id="${id}"]`);
+    link.classList.remove('fw-bold');
+    link.classList.add('fw-normal', 'link-secondary');
   });
 };
 
@@ -53,7 +54,7 @@ const renderFeeds = (elements, feeds, i18next) => {
 
     listItem.append(title);
     listItem.append(description);
-    listContainer.prepend(listItem);
+    listContainer.append(listItem);
   });
 
   card.append(cardTitle);
@@ -70,7 +71,7 @@ const renderPosts = (elements, posts, i18next) => {
   cardBody.classList.add('card-body');
   const cardTitle = document.createElement('h2');
   cardTitle.classList.add('card-title', 'h4');
-  cardTitle.textContent = i18next.t('feeds');
+  cardTitle.textContent = i18next.t('posts');
   card.append(cardTitle);
   card.append(cardBody);
 
@@ -95,7 +96,7 @@ const renderPosts = (elements, posts, i18next) => {
     button.dataset.id = id;
     button.dataset.bsToggle = 'modal';
     button.dataset.bsTarget = '#modal';
-    button.textContent = 'Просмотр';
+    button.textContent = i18next.t('postButton');
     button.setAttribute('type', 'button');
 
     listItem.append(a);
@@ -109,19 +110,30 @@ const renderPosts = (elements, posts, i18next) => {
   elements.posts.append(card);
 };
 
+const changeLng = (state, elements, value, i18next) => {
+  const { feeds, posts, ui } = state;
+  const view = ui.visitedPostsId;
+  const lngBtns = document.querySelectorAll('.lngBtn');
+  lngBtns.forEach((btn) => {
+    btn.classList.remove('active');
+    const activeBtn = document.querySelector(`[data-lng="${value}"]`);
+    activeBtn.classList.add('active');
+    i18next.changeLanguage(value);
+    renderText(elements, i18next);
+    renderMessage(elements, i18next, state.form.status);
+    if (state.feeds.length > 0) {
+      renderFeeds(elements, feeds, i18next);
+      renderPosts(elements, posts, i18next);
+      renderVisitedPost(view);
+    }
+  });
+};
+
 const renderModal = (elements, posts) => {
   const { title, description, link } = posts;
   elements.modalTitle.innerHTML = title;
   elements.modalBody.innerHTML = description;
   elements.modalLink.setAttribute('href', link);
-};
-
-const renderVisitedPost = (value) => {
-  value.forEach((id) => {
-    const link = document.querySelector(`[data-id="${id}"]`);
-    link.classList.remove('fw-bold');
-    link.classList.add('fw-normal', 'link-secondary');
-  });
 };
 
 const processHandler = (state, elements, process) => {

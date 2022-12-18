@@ -7,6 +7,9 @@ export default {
     button: 'Add',
     feeds: 'Feeds',
     posts: 'Posts',
+    postButton: 'View',
+    close: 'Close',
+    readMore: 'Read more',
     messages: {
       mustBeValid: 'The link must be a valid URL',
       linkExists: 'Should not be empty',

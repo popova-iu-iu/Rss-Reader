@@ -7,6 +7,9 @@ export default {
     button: 'Добавить',
     feeds: 'Фиды',
     posts: 'Посты',
+    postButton: 'Просмотр',
+    close: 'Закрыть',
+    readMore: 'Читать полностью',
     messages: {
       mustBeValid: 'Ссылка должна быть валидным URL',
       linkExists: 'RSS уже существует',

@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import _ from 'lodash';
 import onChange from 'on-change';
 import i18n from 'i18next';
 import axios from 'axios';
@@ -12,13 +13,6 @@ const validate = (url, urls) => yup.string().required()
   .url('mustBeValid')
   .notOneOf(urls, 'linkExists')
   .validate(url);
-
-const addFeed = (url, data, state) => {
-  const { urls, feeds, posts } = state;
-  urls.push(url);
-  feeds.push(data.feed);
-  posts.unshift(...data.posts);
-};
 
 // const updateFeeds = (state) => {
 //   const promise = state.urls.map((url) => axios
@@ -34,13 +28,9 @@ const addFeed = (url, data, state) => {
 export default () => {
   const state = {
     form: {
-      valid: true,
       processState: 'filling',
-      processError: null,
-      errors: {},
       status: null,
     },
-    urls: [],
     feeds: [],
     posts: [],
     ui: {
@@ -70,6 +60,9 @@ export default () => {
     modalBody: document.querySelector('.modal-body'),
     modalLink: document.querySelector('.modalLink'),
 
+    readMore: document.querySelector('.read'),
+    close: document.querySelector('.closeBtn'),
+
     btnLng: document.querySelector('.btn-group'),
   };
 
@@ -85,13 +78,22 @@ export default () => {
 
     const formData = new FormData(event.target);
     const url = formData.get('url');
+    const urls = watchedState.feeds.map((feed) => feed.url);
 
-    validate(url, watchedState.urls)
+    validate(url, urls)
       .then((link) => axios
         .get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(link)}`))
       .then((response) => {
         const data = parser(response.data.contents);
-        addFeed(url, data, watchedState);
+        data.feed.id = _.uniqueId();
+        data.feed.url = url;
+        watchedState.feeds.unshift(data.feed);
+        watchedState.posts = [...data.posts, ...watchedState.posts];
+        watchedState.posts.forEach((p) => {
+          const post = p;
+          post.id = _.uniqueId();
+          post.feedId = data.feed.id;
+        });
         watchedState.form.processState = 'success';
         watchedState.form.status = 'success';
       })
@@ -115,4 +117,31 @@ export default () => {
       watchedState.ui.visitedPostsId.push(id);
     }
   });
+
+  const updatePosts = () => {
+    const urls = watchedState.feeds.map((feed) => feed.url);
+    const promises = urls.map((url) => axios
+      .get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`)
+      .then((response) => {
+        const data = parser(response.data.contents);
+
+        const postsForFeed = watchedState.posts.filter(
+          (post) => post.feedId === data.feed.id,
+        );
+        const postLinksForFeed = watchedState.posts
+          .filter((post) => post.id === data.feed.id)
+          .map((post) => post.link);
+        const addedPosts = postsForFeed.filter(
+          (post) => !postLinksForFeed.includes(post.link),
+        );
+        watchedState.posts = addedPosts.concat(...state.posts);
+        console.log(state.posts);
+      })
+      .catch((err) => {
+        throw err;
+      }));
+
+    Promise.all(promises).finally(() => setTimeout(() => updatePosts(), 5000));
+  };
+  setTimeout(updatePosts, 5000);
 };

@@ -19,13 +19,12 @@ export default (xml) => {
 
   const items = [...doc.querySelectorAll('item')];
   const posts = items.map((item) => {
-    const itemId = _.uniqueId();
     const itemTitle = item.querySelector('title').textContent;
     const itemDescription = item.querySelector('description').textContent;
     const itemLink = item.querySelector('link').textContent;
 
     return {
-      id: itemId, feedId, title: itemTitle, description: itemDescription, link: itemLink,
+      feedId, title: itemTitle, description: itemDescription, link: itemLink,
     };
   });
 
