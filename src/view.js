@@ -111,7 +111,9 @@ const renderPosts = (elements, posts, i18next) => {
 };
 
 const changeLng = (state, elements, value, i18next) => {
-  const { feeds, posts, ui } = state;
+  const {
+    feeds, posts, ui, form,
+  } = state;
   const view = ui.visitedPostsId;
   const lngBtns = document.querySelectorAll('.lngBtn');
   lngBtns.forEach((btn) => {
@@ -120,9 +122,9 @@ const changeLng = (state, elements, value, i18next) => {
     activeBtn.classList.add('active');
     i18next.changeLanguage(value);
     renderText(elements, i18next);
-    if (state.form.status = null) {
+    if (form.status) {
       renderMessage(elements, i18next, state.form.status);
-    };    
+    }
     if (state.feeds.length > 0) {
       renderFeeds(elements, feeds, i18next);
       renderPosts(elements, posts, i18next);
