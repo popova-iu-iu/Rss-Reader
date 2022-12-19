@@ -5,3 +5,8 @@
 [![Node CI](https://github.com/popova-iu-iu/frontend-project-11/actions/workflows/nodejs.yml/badge.svg)](https://github.com/popova-iu-iu/frontend-project-11/actions)
 
 ### [Demonstration](https://frontend-project-11-reqfmn9pu-popova-iu-iu.vercel.app/)
+
+#### RSS examples
+* http://feeds.bbci.co.uk/news/world/rss.xml
+* https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/world/rss.xml
+* http://www.aljazeera.com/xml/rss/all.xml
