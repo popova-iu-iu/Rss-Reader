@@ -14,17 +14,6 @@ const validate = (url, urls) => yup.string().required()
   .notOneOf(urls, 'linkExists')
   .validate(url);
 
-// const updateFeeds = (state) => {
-//   const promise = state.urls.map((url) => axios
-//     .get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`)
-//     .then((response) => {
-//       const newPosts = parser(response.data.contents);
-//       console.log(response);
-//     })
-//     .catch(() => {}));
-//   Promise.all(promise).finally(() => setTimeout(() => updateFeeds(state), 5000));
-// };
-
 export default () => {
   const state = {
     form: {

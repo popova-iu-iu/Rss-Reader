@@ -16,6 +16,7 @@ export default {
       rss: 'The resource does not contain valid RSS',
       success: 'RSS uploaded successfully',
       loading: 'Loading...',
+      'Network Error': 'Network Error',
     },
   },
 };

@@ -16,6 +16,7 @@ export default {
       rss: 'Ресурс не содержит валидный RSS',
       success: 'RSS успешно загружен',
       loading: 'Идет загрузка...',
+      'Network Error': 'Ошибка сети',
     },
   },
 };
