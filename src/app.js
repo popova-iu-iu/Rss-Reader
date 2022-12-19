@@ -124,7 +124,6 @@ export default () => {
           (post) => !postLinksForFeed.includes(post.link),
         );
         watchedState.posts = addedPosts.concat(...state.posts);
-        console.log(state.posts);
       })
       .catch((err) => {
         throw err;

@@ -120,7 +120,9 @@ const changeLng = (state, elements, value, i18next) => {
     activeBtn.classList.add('active');
     i18next.changeLanguage(value);
     renderText(elements, i18next);
-    renderMessage(elements, i18next, state.form.status);
+    if (state.form.status = null) {
+      renderMessage(elements, i18next, state.form.status);
+    };    
     if (state.feeds.length > 0) {
       renderFeeds(elements, feeds, i18next);
       renderPosts(elements, posts, i18next);
