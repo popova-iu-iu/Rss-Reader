@@ -4,7 +4,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/91231b1626c932db260c/maintainability)](https://codeclimate.com/github/popova-iu-iu/frontend-project-11/maintainability)
 [![Node CI](https://github.com/popova-iu-iu/frontend-project-11/actions/workflows/nodejs.yml/badge.svg)](https://github.com/popova-iu-iu/frontend-project-11/actions)
 
-### [Demonstration](https://frontend-project-11-reqfmn9pu-popova-iu-iu.vercel.app/)
+### [Demonstration](https://frontend-project-11-ln375u8ly-popova-iu-iu.vercel.app/)
 
 #### RSS examples
 * http://feeds.bbci.co.uk/news/world/rss.xml
