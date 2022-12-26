@@ -86,7 +86,7 @@ export default () => {
 
     validate(url, urls)
       .then((link) => axios
-        .get(buildUrl(url)))
+        .get(buildUrl(link)))
       .then((response) => {
         const data = parser(response.data.contents);
         data.feed.id = _.uniqueId();

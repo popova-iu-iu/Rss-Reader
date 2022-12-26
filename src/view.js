@@ -1,11 +1,11 @@
 const renderText = (elements, i18next) => {
   const {
-     button, readMore, close, headline, subtitle, placeholder, example
+    button, readMore, close, headline, subtitle, placeholder, example,
   } = elements;
-  
-  headline.textContent = i18next.t('headline');  
-  subtitle.textContent = i18next.t('subtitle');  
-  placeholder.textContent = i18next.t('placeholder');  
+
+  headline.textContent = i18next.t('headline');
+  subtitle.textContent = i18next.t('subtitle');
+  placeholder.textContent = i18next.t('placeholder');
   example.textContent = i18next.t('example');
   button.textContent = i18next.t('button');
   readMore.textContent = i18next.t('readMore');

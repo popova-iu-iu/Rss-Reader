@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 export default (xml) => {
   const parser = new DOMParser();
   const doc = parser.parseFromString(xml, 'text/xml');
