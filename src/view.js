@@ -1,17 +1,13 @@
 const renderText = (elements, i18next) => {
   const {
-    form, button, readMore, close,
+     button, readMore, close, headline, subtitle, placeholder, example
   } = elements;
-  const headline = document.querySelector('.display-3 ');
-  headline.textContent = i18next.t('headline');
-  const subtitle = document.querySelector('.lead');
-  subtitle.textContent = i18next.t('subtitle');
-  const placeholder = form.querySelector('[for="url-input"]');
-  placeholder.textContent = i18next.t('placeholder');
-  const example = document.querySelector('.example');
+  
+  headline.textContent = i18next.t('headline');  
+  subtitle.textContent = i18next.t('subtitle');  
+  placeholder.textContent = i18next.t('placeholder');  
   example.textContent = i18next.t('example');
   button.textContent = i18next.t('button');
-
   readMore.textContent = i18next.t('readMore');
   close.textContent = i18next.t('close');
 };
