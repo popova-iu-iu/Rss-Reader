@@ -6,15 +6,14 @@ export default (xml) => {
   const parserError = doc.querySelector('parsererror');
 
   if (parserError) {
-    throw new Error('rss');
+    throw Error('rss');
   }
 
-  const feedId = _.uniqueId();
   const title = doc.querySelector('title').textContent;
   const description = doc.querySelector('description').textContent;
   const link = doc.querySelector('link');
   const feed = {
-    feedId, title, description, link,
+    title, description, link,
   };
 
   const items = [...doc.querySelectorAll('item')];
@@ -24,7 +23,7 @@ export default (xml) => {
     const itemLink = item.querySelector('link').textContent;
 
     return {
-      feedId, title: itemTitle, description: itemDescription, link: itemLink,
+      title: itemTitle, description: itemDescription, link: itemLink,
     };
   });
 

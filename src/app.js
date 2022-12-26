@@ -14,6 +14,16 @@ const validate = (url, urls) => yup.string().required()
   .notOneOf(urls, 'linkExists')
   .validate(url);
 
+const buildUrl = (url) => {
+  const proxy = 'https://allorigins.hexlet.app';
+  const path = 'get';
+  const newUrl = new URL(path, proxy);
+  newUrl.searchParams.append('disableCache', 'true');
+  newUrl.searchParams.append('url', url);
+
+  return newUrl.href;
+};
+
 export default () => {
   const state = {
     form: {
@@ -44,6 +54,11 @@ export default () => {
     posts: document.querySelector('.posts'),
     feeds: document.querySelector('.feeds'),
 
+    headline: document.querySelector('.display-3 '),
+    subtitle: document.querySelector('.lead'),
+    placeholder: document.querySelector('[for="url-input"]'),
+    example: document.querySelector('.example'),
+
     modal: document.querySelector('.modal'),
     modalTitle: document.querySelector('.modal-title'),
     modalBody: document.querySelector('.modal-body'),
@@ -71,7 +86,7 @@ export default () => {
 
     validate(url, urls)
       .then((link) => axios
-        .get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(link)}`))
+        .get(buildUrl(url)))
       .then((response) => {
         const data = parser(response.data.contents);
         data.feed.id = _.uniqueId();
@@ -110,7 +125,7 @@ export default () => {
   const updatePosts = () => {
     const urls = watchedState.feeds.map((feed) => feed.url);
     const promises = urls.map((url) => axios
-      .get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`)
+      .get(buildUrl(url))
       .then((response) => {
         const data = parser(response.data.contents);
 
